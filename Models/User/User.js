@@ -1,7 +1,13 @@
 var mongoose = require("mongoose");
 const crypto = require('crypto');
+const { truncateSync } = require("fs");
 var ObjectId=mongoose.ObjectId;
 const userSchema = new mongoose.Schema({
+    username:
+    {
+        type: String,
+        unique:true
+    },
     name :
     {
         type: String,
@@ -30,7 +36,8 @@ const userSchema = new mongoose.Schema({
     city : 
     {
         type: String,
-        maxlength: 30
+        maxlength: 30,
+        required: true
     },
     encry_password :
     {
@@ -52,6 +59,10 @@ const userSchema = new mongoose.Schema({
         default: 0
     },
     photo:
+    {
+        type: String
+    },
+    cover_photo:
     {
         type: String
     },

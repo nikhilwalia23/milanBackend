@@ -14,9 +14,9 @@ var singUp = (req, res) => {
     });
 }
 var login = (req, res) => {
-    const email = req.body.email;
+    const username = req.body.username;
     const ps = req.body.password;
-    User.findOne({ email }, (err, user) => {
+    User.findOne({ username }, (err, user) => {
         if (err) {
             return res.json(err).status(400);
         }
@@ -27,15 +27,16 @@ var login = (req, res) => {
             const { name, number, role} = user;
             const id = user._id;
             if (user.authenticate(ps)) {
-                jwt.sign({ id }, process.env.HASHING_KEY, (err, token) => {
-                    if (err) {
-                        return res.status(404).json({ "error": "Unable To login" });
+                jwt.sign({ id }, process.env.HASHING_KEY, { algorithm: 'HS256' }, function(err, token) {
+                    if(err)
+                    {
+                        return res.status(400).json(err);
                     }
-                    else {
-                        res.cookie("token", token, { path: ["http://localhost:3000", "https://touristbackend.herokuapp.com/api"], httpOnly: true, sameSite: 'none', secure: true})
-                        return res.status(200).json({ id, name, role,email ,number});
+                    else
+                    {
+                        return res.status(200).json({token,name,role});
                     }
-                });
+                  });
             }
             else {
                 return res.status(404).json({ "error": "UserId and Password Does not Matach" });
@@ -44,15 +45,18 @@ var login = (req, res) => {
     })
 }
 var isLogin = (req, res, next) => {
-    if (req.cookies['token'] == undefined) {
-        return res.status(400).json({ "error": "Token must be provided" });
-    }
-    const token = req.cookies['token'];
+    //cookie Based Authenticate
+    // if (req.cookies['token'] == undefined) {
+    //     return res.status(400).json({ "error": "Token must be provided" });
+    // }
+    // const token = req.cookies['token'];
+    const token= req.body.token;
     jwt.verify(token, process.env.HASHING_KEY, (err, curr) => {
         if (err) {
             return res.send(err);
         }
         else {
+            console.log(curr.id);
             if (curr.id == req.body.id) {
                 next();
             }

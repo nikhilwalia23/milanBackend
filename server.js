@@ -7,10 +7,18 @@ const bodyparser = require('body-parser');
 
 //Routes Imported from other Files
 const authRoutes = require('./Routes/auth');
-
+var mongoose = require("mongoose");
 const app = express();
 const PORT=8888;
 
+
+//Data Base Connection
+mongoose.connect(process.env.MONGO_ADDRESS,{
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  dbName: 'Milan',
+}).then(res => console.log("Database Connected")).
+  catch(err => console.log(err));
 
 //App all Routes
 
