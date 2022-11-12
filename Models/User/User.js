@@ -1,6 +1,5 @@
 var mongoose = require("mongoose");
 const crypto = require('crypto');
-const { truncateSync } = require("fs");
 var ObjectId=mongoose.ObjectId;
 const userSchema = new mongoose.Schema({
     username:

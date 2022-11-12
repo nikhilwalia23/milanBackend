@@ -5,5 +5,5 @@ router.post("/singup",singUp);
 router.post("/login",login);
 router.get("/check",isLogin,welcome);
 router.post("/forgetPassword",forgetPassword);
-router.post("/resetPassowr",ressetPassword);
+router.post("/resetPassowrd",ressetPassword);
 module.exports = router;

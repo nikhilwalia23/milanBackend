@@ -6,10 +6,11 @@ var singUp = (req, res) => {
     const user = new User(req.body);
     user.save((err, user) => {
         if (err) {
-            return res.status(400).json({ "error": "Action Failed" });
+            return res.status(400).json({ "error": "Action Failed", err });
         }
         else {
-            return res.status(200).json({ "message": "User Account Created" }).status(200);
+            
+            return res.status(200).json({ "message": "User Account Created", user }).status(200);
         }
     });
 }
@@ -56,7 +57,6 @@ var isLogin = (req, res, next) => {
             return res.send(err);
         }
         else {
-            console.log(curr.id);
             if (curr.id == req.body.id) {
                 next();
             }

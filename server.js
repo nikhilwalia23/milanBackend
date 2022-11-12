@@ -7,17 +7,14 @@ const bodyparser = require('body-parser');
 
 //Routes Imported from other Files
 const authRoutes = require('./Routes/auth');
+const postRoutes = require('./Routes/post');
 var mongoose = require("mongoose");
 const app = express();
 const PORT=8888;
 
 
 //Data Base Connection
-mongoose.connect(process.env.MONGO_ADDRESS,{
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: 'Milan',
-}).then(res => console.log("Database Connected")).
+mongoose.connect(process.env.MONGO_CLUSTER).then(res => console.log("Database Connected")).
   catch(err => console.log(err));
 
 //App all Routes
@@ -27,6 +24,7 @@ app.use(bodyparser.json());
 
 //Used Routes
 app.use('/backendapi',authRoutes);
+app.use('/backendapi',postRoutes);
 
 
 
