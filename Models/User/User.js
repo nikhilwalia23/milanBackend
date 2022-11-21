@@ -77,12 +77,22 @@ const userSchema = new mongoose.Schema({
     {
         type: String
     },
-    Requeted_dates:[this],
-    Accepted_dates:[this],
+    Potential_dates:[this],
+    Chats:
+    {
+        //key is username and value is Chatid of Chat Schema
+        type: Map,
+        of: String
+    },
     Premium_member:
     {
         type: Boolean,
         default: false
+    },
+    Online:
+    {
+        type: Boolean,
+        default:false
     }
 });
 //Virtual Methods Set Up and Salt value and Encrypt the password before Saving into the Database

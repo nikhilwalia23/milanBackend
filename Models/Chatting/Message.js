@@ -13,7 +13,8 @@ const messageSchema = new mongoose.Schema({
     receiver:
     {
         type: ObjectId,
-        ref: 'User'
+        ref: 'User',
+        default: null
     },
     message_seen:
     {
@@ -21,6 +22,6 @@ const messageSchema = new mongoose.Schema({
         default: false
     }
 
-});
+},{timestamps:true});
 const Message = mongoose.model('Message',messageSchema);
 module.exports = {Message};
