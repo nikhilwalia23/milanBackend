@@ -5,6 +5,7 @@ const { Server } = require("socket.io");
 const cors = require('cors');
 var http = require("http");
 const bodyparser = require('body-parser');
+const {validate} = require('./Controllers/auth.js')
 
 
 const app = express();
@@ -27,11 +28,42 @@ const matchRoutes = require('./Routes/match');
 var mongoose = require("mongoose");
 
 
+//Import Socketio Listners
+const registerroomhandlers = require("./Controllers/Chatting/Socket_helper/room.js");
 
-
-io.on('connection', (socket) => {
+let onConnection = (socket) => {
   console.log(`a user connected ${socket.id}`);
-});
+
+
+  registerroomhandlers(io,socket);
+  //Join all the Subscribed Room
+  //Retrive All Unseen Message From Database and Send
+  socket.on('unseen_message',(id,token)=> 
+  {
+      //verfiy token
+      if(validate(id,token))
+      {
+        console.log("User Validated");
+      }
+      else
+      {
+        console.log("Invalid Token");
+      }
+  });
+
+  //Send New Message
+
+
+
+
+  //Remove From All The Joined Rooms
+  socket.on('disconnect',() => 
+  {
+    console.log(`a user disconnected ${socket.id}`);
+  });
+}
+
+io.on('connection',onConnection);
 
 //Data Base Connection
 mongoose.connect(process.env.MONGO_CLUSTER).then(res => console.log("Database Connected")).

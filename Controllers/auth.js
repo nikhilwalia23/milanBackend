@@ -61,7 +61,7 @@ var isLogin = (req, res, next) => {
                 next();
             }
             else {
-                res.status(401).json({ "error": "Acess Denied" });
+                return res.status(401).json({ "error": "Acess Denied" });
             }
         }
     });
@@ -166,4 +166,22 @@ let ressetPassword = (req, res) => {
         }
     });
 }
-module.exports = { singUp, login, isLogin, welcome, isEmploye, forgetPassword, ressetPassword};
+//validate function for Socket io 
+let validate = (id,token)=>
+{
+    jwt.verify(token, process.env.HASHING_KEY, (err, curr) => {
+        if (err) {
+            return false;
+        }
+        else {
+            if (curr.id == id) {
+                return true;
+            }
+            else {
+                
+                return false;
+            }
+        }
+    });
+}
+module.exports = { singUp, login, isLogin, welcome, isEmploye, forgetPassword, ressetPassword,validate};
