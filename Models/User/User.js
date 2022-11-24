@@ -77,7 +77,9 @@ const userSchema = new mongoose.Schema({
     {
         type: String
     },
-    Potential_dates:[this],
+    Potential_dates:[
+        {type:ObjectId,ref:'User'}
+    ],
     Chats:
     {
         //key is username and value is Chatid of Chat Schema

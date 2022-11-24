@@ -7,7 +7,7 @@ let match_people = (req,res) =>
 {
     let {p1,p2}=req.body;
     //Create New System Genrated Message 'Say Hello' When Two People Match
-    let message= new Message({data:'Say Hello'});
+    let message= new Message({data:'Say Hello',sender:p2,receiver:p1});
     message.save((err,msg) =>
     {
         if(err)
@@ -16,9 +16,8 @@ let match_people = (req,res) =>
         }
         else
         {
-            let id = msg.__id;
             let chat = new Chat({});
-            chat.conversations.push(id);
+            chat.conversations.push(msg);
             chat.save((err,cht) => 
             {
                 if(err)
@@ -45,6 +44,8 @@ let match_people = (req,res) =>
                                 {
                                     user1.Chats.set(String(p2),String(cht._id));
                                     user2.Chats.set(String(p1),String(cht._id));
+                                    user1.Potential_dates.push(user2);
+                                    user2.Potential_dates.push(user1);
                                     user1.save((err,pp1) => 
                                     {
                                         user2.save((err,pp2) => 

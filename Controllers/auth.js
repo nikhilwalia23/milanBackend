@@ -169,19 +169,18 @@ let ressetPassword = (req, res) => {
 //validate function for Socket io 
 let validate = (id,token)=>
 {
+    let flag=false;
     jwt.verify(token, process.env.HASHING_KEY, (err, curr) => {
         if (err) {
-            return false;
+            return;
         }
         else {
             if (curr.id == id) {
+                flag=true;
                 return true;
-            }
-            else {
-                
-                return false;
             }
         }
     });
+    return flag;
 }
 module.exports = { singUp, login, isLogin, welcome, isEmploye, forgetPassword, ressetPassword,validate};

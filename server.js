@@ -30,12 +30,15 @@ var mongoose = require("mongoose");
 
 //Import Socketio Listners
 const registerroomhandlers = require("./Controllers/Chatting/Socket_helper/room.js");
+const registermessagehandlers = require("./Controllers/Chatting/Socket_helper/message");
+
 
 let onConnection = (socket) => {
   console.log(`a user connected ${socket.id}`);
 
 
   registerroomhandlers(io,socket);
+  registermessagehandlers(io,socket);
   //Join all the Subscribed Room
   //Retrive All Unseen Message From Database and Send
   socket.on('unseen_message',(id,token)=> 
@@ -44,6 +47,7 @@ let onConnection = (socket) => {
       if(validate(id,token))
       {
         console.log("User Validated");
+
       }
       else
       {
