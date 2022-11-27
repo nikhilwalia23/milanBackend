@@ -1,40 +1,20 @@
-var {Message} = require("../../Models/Chatting/Message");
-var {Chat} = require("../../Models/Chatting/Chat")
-const sendMessage = (sender,receiver,chatid,data) => 
-{
-    Chat.findById(chatid,(err,chat)=> 
-    {
-        if(err)
-        {
-            return err;
+let {User} = require("../../Models/User/User");
+//Fetch Chat Id Associated With That User
+const fetchContact = (req,res) => {
+    const userid = req.body.id;
+    User.findById(userid, 'Potential_dates Chats', (err, user) => {
+        if (err) {
+            return res.status(500).json({"error":"Inernal server Error"});
         }
-        else
-        {
-            //Create New Message
-            const msg = new Message({data,sender,receiver});
-            msg.save((err,message) => 
-            {
-                if(err)
-                {
-                    return err;
-                }
-                else
-                {
-                    chat.conversations.push(message._id);
-                    chat.save((err,cht)=> 
-                    {
-                        if(err)
-                        {
-                            return err;
-                        }
-                        else
-                        {
-                            return cht;
-                        }
-                    });
-                }
-            })
+        else {
+            let chats = [];
+            for (let i = 0; i < user.Potential_dates.length; i++) {
+                let chtid = user.Potential_dates[i];
+                rooms.push(chtid);
+            }
+            return res.status(200).json({rooms});
         }
-    })
+    }
+    );
 }
-module.exports = {sendMessage};
+module.exports = {fetchContact};

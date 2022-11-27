@@ -35,7 +35,7 @@ var login = (req, res) => {
                     }
                     else
                     {
-                        return res.status(200).json({token,name,role});
+                        return res.status(200).json({id,token,name,role});
                     }
                   });
             }

@@ -25,6 +25,10 @@ const io = new Server(server,{cors:
 const authRoutes = require('./Routes/auth');
 const postRoutes = require('./Routes/post');
 const matchRoutes = require('./Routes/match');
+const chatRoutes = require('./Routes/chat');
+const userRoutes = require('./Routes/user');
+
+
 var mongoose = require("mongoose");
 
 
@@ -39,34 +43,28 @@ let onConnection = (socket) => {
 
   registerroomhandlers(io,socket);
   registermessagehandlers(io,socket);
-  //Join all the Subscribed Room
-  //Retrive All Unseen Message From Database and Send
-  socket.on('unseen_message',(id,token)=> 
-  {
-      //verfiy token
-      if(validate(id,token))
-      {
-        console.log("User Validated");
-
-      }
-      else
-      {
-        console.log("Invalid Token");
-      }
-  });
-
-  //Send New Message
-
-
-
-
   //Remove From All The Joined Rooms
   socket.on('disconnect',() => 
   {
     console.log(`a user disconnected ${socket.id}`);
   });
 }
-
+io.use((socket,next) => 
+{
+  if(validate(socket.handshake.auth.userid,socket.handshake.auth.token))
+  {
+      next();
+  }
+  else
+  {
+      //If the next method is called with an Error object,
+      //the connection will be refused and the client will receive an (connect_error) event
+      const err = new Error("not authorized");
+      err.data = { content: "Please retry later"};
+      //To Do Handle connect_error Event At Frontend
+      next(err); 
+  }
+});
 io.on('connection',onConnection);
 
 //Data Base Connection
@@ -82,7 +80,8 @@ app.use(bodyparser.json());
 app.use('/backendapi',authRoutes);
 app.use('/backendapi',postRoutes);
 app.use('/backendapi',matchRoutes);
-
+app.use('/backendapi',chatRoutes);
+app.use('/backendapi',userRoutes);
 
 app.get('/temp',(req,res) => 
 {

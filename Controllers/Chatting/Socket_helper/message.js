@@ -1,5 +1,6 @@
 let {Message} = require("../../../Models/Chatting/Message.js");
 const { User } = require("../../../Models/User/User");
+let {Chat} = require("../../../Models/Chatting/Chat")
 module.exports = (io,socket) => 
 {
     //Mark as Seen Message
@@ -19,7 +20,7 @@ module.exports = (io,socket) =>
     }
 
 
-    //fetch Old Message
+    //fetch Old Message(Testing Remaning)
     const fetchOldMessage = (userid) => 
     {
         User.findById(userid,(err,user)=> 
@@ -50,21 +51,72 @@ module.exports = (io,socket) =>
     }
 
 
-    //Send New Message
-    const createNewMessage = (userid,target) => 
+    //Create New Message(Testing Remaning)
+    const createNewMessage = (userid,target,text) => 
     {
-
+        //Create New Message With data
+        User.findById(userid,(err,user)=> 
+        {
+            if(err)
+            {
+                socket.volatile.emit('error',{msg:"Invalid User"});
+            }
+            else
+            {
+                const msg = new Message({data:text,sender:userid,receiver:target});
+                msg.save((err,ms)=> 
+                {
+                    if(err)
+                    {
+                        socket.volatile.emit('error',{msg:"Internal Server Error"});
+                    }
+                    else
+                    {    
+                        Chat.findById(user.Chats.get(target),(err,cht)=> 
+                        {
+                            if(err)
+                            {
+                                socket.volatile.emit('error',{msg:"Not Permitted"});
+                            }
+                            else
+                            {
+                                cht.conversations.push(msg);
+                                cht.save((err,chat)=> 
+                                {
+                                    if(err)
+                                    {
+                                        socket.volatile.emit('error',{msg:"Not Permitted"}); 
+                                    }
+                                    else
+                                    {
+                                        //Send Message to Target User
+                                        sendmsg(msg,user.Chats.get(target));
+                                    }
+                                });
+                            }
+                        });
+                    }
+                })
+            }
+        });
     }
 
-    //Create New Message
 
     //Publish Message to Socket
     const sendmsg = (message,socketid)=>
     {
-        socket.to(socketid).emit('new_message',message);
+        socket.to(socketid).volatile.emit('new_message',message);
+    }
+
+
+    //Fetch 10 Last Message From given chat id by skiping 
+    const fetchmsg = (chatid,skip) => 
+    {
+        //Fetch Last 10 (Still Pending)
     }
 
     socket.on('create_message',createNewMessage);
     socket.on('old_message',fetchOldMessage);
     socket.on('seen_message',markAsSeen);
+    
 }
