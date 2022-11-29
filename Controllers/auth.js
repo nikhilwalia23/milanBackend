@@ -25,7 +25,7 @@ var login = (req, res) => {
             return res.status(404).json({ "error": "User Does not Account" });
         }
         else {
-            const { name, number, role} = user;
+            const { name, number, role,Chats} = user;
             const id = user._id;
             if (user.authenticate(ps)) {
                 jwt.sign({ id }, process.env.HASHING_KEY, { algorithm: 'HS256' }, function(err, token) {
@@ -35,7 +35,7 @@ var login = (req, res) => {
                     }
                     else
                     {
-                        return res.status(200).json({id,token,name,role});
+                        return res.status(200).json({id,token,name,role,Chats});
                     }
                   });
             }

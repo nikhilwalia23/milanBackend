@@ -1,6 +1,6 @@
 let {Message} = require("../../../Models/Chatting/Message.js");
+let {Chat} = require("../../../Models/Chatting/Chat.js");
 const { User } = require("../../../Models/User/User");
-let {Chat} = require("../../../Models/Chatting/Chat")
 module.exports = (io,socket) => 
 {
     //Mark as Seen Message
@@ -105,7 +105,9 @@ module.exports = (io,socket) =>
     //Publish Message to Socket
     const sendmsg = (message,socketid)=>
     {
-        socket.to(socketid).volatile.emit('new_message',message);
+        io.volatile.to(socketid).emit('new_message',message);
+        // socket.volatile.emit('new_message',message);
+
     }
 
 
@@ -113,10 +115,21 @@ module.exports = (io,socket) =>
     const fetchmsg = (chatid,skip) => 
     {
         //Fetch Last 10 (Still Pending)
+        Chat.findById(chatid).populate('conversations').then((data)=> 
+        {
+            socket.emit('message',data);
+        }).catch((err)=>
+        {
+            socket.to(chatid).volatile.emit('error',err);
+        })
     }
+
+
+
 
     socket.on('create_message',createNewMessage);
     socket.on('old_message',fetchOldMessage);
     socket.on('seen_message',markAsSeen);
+    socket.on('fetch_message_byid',fetchmsg);
     
 }
