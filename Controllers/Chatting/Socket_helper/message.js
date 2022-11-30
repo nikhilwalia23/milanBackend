@@ -106,8 +106,6 @@ module.exports = (io,socket) =>
     const sendmsg = (message,socketid)=>
     {
         io.volatile.to(socketid).emit('new_message',message);
-        // socket.volatile.emit('new_message',message);
-
     }
 
 
