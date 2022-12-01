@@ -118,16 +118,26 @@ module.exports = (io,socket) =>
             socket.emit('message',data);
         }).catch((err)=>
         {
-            socket.to(chatid).volatile.emit('error',err);
+            io.volatile.to(chatid).emit('error',err);
         })
     }
 
-
-
+    //Mark As Seen in Message
+    const mark_message = (chatid,msgid) => 
+    {
+        Message.findByIdAndUpdate(msgid,{message_seen:true},(err,msg)=> 
+        {
+            if(!err && msg) 
+            {
+                io.volatile.to(chatid).emit('update_status',{msg});
+            }
+        });
+    }
 
     socket.on('create_message',createNewMessage);
     socket.on('old_message',fetchOldMessage);
     socket.on('seen_message',markAsSeen);
     socket.on('fetch_message_byid',fetchmsg);
+    socket.on('mark_as_read',mark_message);
     
 }
