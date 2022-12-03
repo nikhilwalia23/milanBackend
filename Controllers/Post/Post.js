@@ -25,17 +25,17 @@ const editPost = () =>
 
 const showAllpost = (req,res) => 
 {
-    Post.find({},{},{sort:{ 'created_at' : -1 }},(err,post) => 
+    Post.find({},{},{sort:{ 'created_at' : -1 }}).limit(10).exec((err,post)=> 
     {
         if(err)
         {
-            return res.staGETtus(500).json(err);
+            return res.status(400).json(err);
         }
         else
         {
             return res.status(200).json(post);
         }
-    }).limit(10);
+    });
 }
 
 const viewPost = (req,res) => 

@@ -129,6 +129,7 @@ module.exports = (io,socket) =>
         {
             if(!err && msg) 
             {
+                console.log("reach her");
                 io.volatile.to(chatid).emit('update_status',{msg});
             }
         });

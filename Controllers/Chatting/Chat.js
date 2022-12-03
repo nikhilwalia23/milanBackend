@@ -1,3 +1,4 @@
+const { Chat } = require("../../Models/Chatting/Chat");
 let {User} = require("../../Models/User/User");
 //Fetch Chat Id Associated With That User
 const fetchContact = (req,res) => {
@@ -13,5 +14,11 @@ const fetchContact = (req,res) => {
             return res.status(200).json(users.Potential_dates);
         }
     });
+}
+
+//Fetch Last Message With List Chat Id
+const fetchLastMessage = (req,res) => 
+{
+    
 }
 module.exports = {fetchContact};
