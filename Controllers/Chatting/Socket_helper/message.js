@@ -112,12 +112,20 @@ module.exports = (io,socket) =>
     //Fetch 10 Last Message From given chat id by skiping 
     const fetchmsg = (chatid,skip) => 
     {
+        console.log("reah her");
+        console.log(chatid);
         //Fetch Last 10 (Still Pending)
         Chat.findById(chatid).populate('conversations').then((data)=> 
         {
+            //skip last (skip) messages
+            data.conversations.splice(data.conversations.length-skip,skip);
+            let last = data.conversations.slice(-10);
+            data.conversations=last;
+            console.log(data.conversations);
             socket.emit('message',data);
         }).catch((err)=>
         {
+            console.log(err);
             io.volatile.to(chatid).emit('error',err);
         })
     }
@@ -138,7 +146,7 @@ module.exports = (io,socket) =>
     socket.on('create_message',createNewMessage);
     socket.on('old_message',fetchOldMessage);
     socket.on('seen_message',markAsSeen);
-    socket.on('fetch_message_byid',fetchmsg);
+    socket.on('fetch_last_message',fetchmsg);
     socket.on('mark_as_read',mark_message);
     
 }

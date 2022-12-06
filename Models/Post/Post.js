@@ -40,6 +40,31 @@ const postSchema = new mongoose.Schema({
         type:Number,
         default: 50
     },
+    bjp:
+    {
+        type: Number,
+        default: 50
+    },
+    congress:
+    {
+        type: Number,
+        default: 50
+    },
+    open_minded:
+    {
+        type: Number,
+        default: 50
+    },
+    feminism:
+    {
+        type: Number,
+        default: 50
+    },
+    religious_liberals:
+    {
+        type: Number,
+        default: 50
+    }
     
 },{ timestamps: true });
 const Post = mongoose.model('Post',postSchema);
