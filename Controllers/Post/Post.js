@@ -1,6 +1,8 @@
 var mongoose = require("mongoose");
 var http = require("http");
 const {Post} = require("../../Models/Post/Post");
+const { User } = require("../../Models/User/User");
+const { getUserDeatails } = require("../User/user");
 var ObjectId=mongoose.ObjectId;
 const createPost = (req,res) => 
 {
@@ -46,6 +48,7 @@ const viewPost = (req,res) =>
 const likePost = (req,res) => 
 {
     const {postid,id} = req.body;
+    //Increate Count
     Post.findOneAndUpdate({_id:postid},{$inc : {'likes_count' : 1}, $push: { liked_by : id }},(err,post) => 
     {
         if(err)
@@ -54,7 +57,18 @@ const likePost = (req,res) =>
         }
         else
         {
-            return res.status(200).json(post);
+            //Push In Likes Array
+            User.findByIdAndUpdate({_id:id},{$push:{likes:postid}},(err,user)=> 
+            {
+                if(err)
+                {
+                    return res.status(500).json(err);
+                }
+                else
+                {
+                    return res.status(200).json(user); 
+                }
+            });
         }
     });
 }

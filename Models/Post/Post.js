@@ -20,16 +20,6 @@ const postSchema = new mongoose.Schema({
         type: String
     },
     //Category Still Serching
-    hindu:
-    {
-        type: Number,
-        default: 50
-    },
-    muslim:
-    {
-        type: Number,
-        default: 50
-    },
     cricket:
     {
         type: Number,
@@ -46,11 +36,6 @@ const postSchema = new mongoose.Schema({
         default: 50
     },
     congress:
-    {
-        type: Number,
-        default: 50
-    },
-    open_minded:
     {
         type: Number,
         default: 50

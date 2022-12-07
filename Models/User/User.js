@@ -95,7 +95,9 @@ const userSchema = new mongoose.Schema({
     {
         type: Boolean,
         default:false
-    }
+    },
+    likes:[{type:ObjectId,ref:'Post'}],
+    dislikes:[{type:ObjectId,ref:'Post'}]
 });
 //Virtual Methods Set Up and Salt value and Encrypt the password before Saving into the Database
 userSchema.virtual("password").set(function(password)
