@@ -4,13 +4,13 @@ const sgMail = require('@sendgrid/mail');
 var singUp = (req, res) => {
     //Check Before Creating User
     const user = new User(req.body);
+    console.log(req.body);
     user.save((err, user) => {
         if (err) {
             return res.status(400).json({ "error": "Action Failed", err });
         }
         else {
-            
-            return res.status(200).json({ "message": "User Account Created", user }).status(200);
+            return res.status(200).json({ "message": "User Account Created Now go and singin",}).status(200);
         }
     });
 }

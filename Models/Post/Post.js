@@ -5,6 +5,10 @@ const postSchema = new mongoose.Schema({
     {
         type: String,
     },
+    img:
+    {
+        type: String
+    },
     post_owner:
     {
         type: String,

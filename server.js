@@ -68,7 +68,7 @@ io.use((socket,next) =>
 io.on('connection',onConnection);
 
 //Data Base Connection
-mongoose.connect(process.env.LOCAl_MONGO_ADDRESS).then(res => console.log("Database Connected")).
+mongoose.connect(process.env.MONGO_CLUSTER).then(res => console.log("Database Connected")).
   catch(err => console.log(err));
 
 //App all Routes
